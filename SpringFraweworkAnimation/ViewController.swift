@@ -7,6 +7,7 @@
 
 import Spring
 
+// MARK: Enum
 enum AnimationNumber {
     case one, two
     
@@ -22,14 +23,17 @@ enum AnimationNumber {
 
 class ViewController: UIViewController {
     
+    // MARK: IB Otlets
     @IBOutlet var springButton: SpringButton!
     @IBOutlet var springLabel: SpringLabel!
     @IBOutlet var springView: SpringView!
     
+    // MARK: Properties
     var number = AnimationNumber.one
     var animationName = Spring.getPresetsForAnimation()
     var curves = Spring.getPresetsForCurves()
     
+    // MARK: IB Actions
     @IBAction func springButtonTapped(_ sender: SpringButton) {
         switch number {
         case .one:
@@ -45,6 +49,7 @@ class ViewController: UIViewController {
     
 }
 
+// MARK: Private Methods
 extension ViewController {
     private func animateObject<T>(springableObject: T) where T: Springable {
         let duration = CGFloat.random(in: 0...2)
@@ -69,49 +74,33 @@ duratation: \(roundedDuration)
     }
     
 }
-
+// MARK: Spring Extensions
 extension Spring {
     static func getPresetsForAnimation() -> [String] {
-        return ["slideLeft",
-                "slideRight",
-                "slideDown",
-                "slideUp",
-                "squeezeLeft",
-                "squeezeRight",
-                "squeezeDown",
-                "squeezeUp",
-                "fadeOutIn",
-                "fadeInLeft",
-                "fadeInRight",
-                "fadeInDown",
-                "fadeInUp",
-                "shake",
-                "pop",
-                "flipX",
-                "flipY",
-                "morph",
-                "squeeze",
-                "flash",
-                "wobble",
-                "swing"]
+        var presets = [String]()
+        for preset in Spring.AnimationPreset.allCases {
+            presets.append(preset.rawValue)
+        }
+        return presets
     }
     
     static func getPresetsForCurves() -> [String] {
-        return ["easeIn",
-                "easeOut",
-                "easeInOut",
-                "linear",
-                "spring",
-                "easeInSine",
-                "easeOutSine",
-                "easeInOutSine",
-                "easeInQuad",
-                "easeOutQuad",
-                "easeInOutQuad",
-                "easeInCubic",
-                "easeOutCubic",
-                "easeInOutCubic",
-                "easeInQuart",
-                "easeOutQuart"]
+        var presets = [String]()
+        for preset in Spring.AnimationCurve.allCases {
+            presets.append(preset.rawValue)
+        }
+        return presets
+    }
+}
+
+extension Spring.AnimationPreset: CaseIterable {
+    public static var allCases: [Spring.AnimationPreset] {
+        return [.Squeeze, .ZoomIn, .FadeInDown, .Morph, .FlipX, .Shake, .Swing, .Wobble, .Pop, .SlideDown, .SlideRight, .SlideUp, .SlideLeft]
+    }
+}
+
+extension Spring.AnimationCurve: CaseIterable {
+    public static var allCases: [Spring.AnimationCurve] {
+        return [.EaseInBack, .EaseOut, .EaseIn, .EaseInBack, .EaseInOut, .Spring, .EaseInQuad, .EaseInQuart]
     }
 }
